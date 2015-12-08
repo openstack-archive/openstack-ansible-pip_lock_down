@@ -1,0 +1,43 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Playbook for role testing
+  hosts: localhost
+  connection: local
+  roles:
+    - role: "{{ rolename | basename }}"
+      pip_links:
+        - name: test-links
+          link: https://openstack-hostname.something/python_packages/master
+      # The $HOME directory is mocked to work with tox
+      #  by defining the 'ansible_env' hash. This should
+      #  NEVER be done outside of testing.
+      ansible_env:  ## NEVER DO THIS OUTSIDE OF TESTING
+        HOME: "/tmp"
+  post_tasks:
+    - name: Open pip lockdown test-links file
+      slurp:
+        src: "/tmp/.pip/links.d/test-links.link"
+      register: test_link
+    - name: Open pip conf file
+      slurp:
+        src: "/tmp/.pip/pip.conf"
+      register: pip_conf
+    - name: Check files contents
+      assert:
+        that:
+          - "'https://openstack-hostname.something/python_packages/master' in (test_link.content | b64decode)"
+          - "'openstack-hostname.something' in (pip_conf.content | b64decode)"
+          - "'no-index = True' in (pip_conf.content | b64decode)"
