@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Code-Review+2: Jesse Pretorius <jesse.pretorius@rackspace.co.uk>
+Workflow+1: Jesse Pretorius <jesse.pretorius@rackspace.co.uk>
+Submitted-by: Jenkins
+Submitted-at: Fri, 11 Dec 2015 09:41:07 +0000
+Reviewed-on: https://review.openstack.org/256013
+Project: openstack/openstack-ansible-pip_lock_down
+Branch: refs/heads/master
