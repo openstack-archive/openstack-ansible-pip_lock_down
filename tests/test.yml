@@ -21,19 +21,14 @@
       pip_links:
         - name: test-links
           link: https://openstack-hostname.something/python_packages/master
-      # The $HOME directory is mocked to work with tox
-      #  by defining the 'ansible_env' hash. This should
-      #  NEVER be done outside of testing.
-      ansible_env:  ## NEVER DO THIS OUTSIDE OF TESTING
-        HOME: "/tmp"
   post_tasks:
     - name: Open pip lockdown test-links file
       slurp:
-        src: "/tmp/.pip/links.d/test-links.link"
+        src: "{{ ansible_env.HOME}}/.pip/links.d/test-links.link"
       register: test_link
     - name: Open pip conf file
       slurp:
-        src: "/tmp/.pip/pip.conf"
+        src: "{{ ansible_env.HOME}}/.pip/pip.conf"
       register: pip_conf
     - name: Check files contents
       assert:
