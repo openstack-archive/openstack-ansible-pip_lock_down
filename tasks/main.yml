@@ -30,30 +30,23 @@
 
 - name: Drop pip lockdown file(s)
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "pip-link-build.py"
+    dest: "{{ ansible_env.HOME }}/.pip/pip-link-build.py"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
-    mode: "{{ item.mode|default('0644') }}"
-  with_items:
-    - { src: "pip-link-build.py", dest: "{{ ansible_env.HOME }}/.pip/pip-link-build.py", mode: "0755" }
+    mode: "0755"
   tags:
     - lock-pip-files
 
 - name: Drop pip global config(s)
   config_template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "global.conf.j2"
+    dest: "{{ ansible_env.HOME }}/.pip/base/global.conf"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
     mode: "0644"
-    config_overrides: "{{ item.config_overrides }}"
-    config_type: "{{ item.config_type }}"
-  with_items:
-    - src: "global.conf.j2"
-      dest: "{{ ansible_env.HOME }}/.pip/base/global.conf"
-      config_overrides: "{{ pip_global_conf_overrides }}"
-      config_type: "ini"
+    config_overrides: "{{ pip_global_conf_overrides }}"
+    config_type: "ini"
   tags:
     - lock-pip-files
 
