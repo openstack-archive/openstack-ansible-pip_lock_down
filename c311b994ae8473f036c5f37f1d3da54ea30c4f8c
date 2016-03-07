@@ -1,0 +1,9 @@
+Code-Review+2: Kevin Carter <kevin.carter@rackspace.com>
+Code-Review+2: Jesse Pretorius (odyssey4me) <jesse.pretorius@rackspace.co.uk>
+Workflow+1: Jesse Pretorius (odyssey4me) <jesse.pretorius@rackspace.co.uk>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 07 Mar 2016 08:45:45 +0000
+Reviewed-on: https://review.openstack.org/289056
+Project: openstack/openstack-ansible-pip_lock_down
+Branch: refs/heads/master
