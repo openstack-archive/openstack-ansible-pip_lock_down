@@ -21,7 +21,6 @@ pip_timeout: 120
 
 # Options for pip install
 pip_upgrade: true
-pip_allow_all_external: true
 
 
 # Drop link files to lock down pip
