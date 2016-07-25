@@ -1,5 +1,6 @@
-OpenStack pip lockdown
-######################
+OpenStack pip_lock_down
+#######################
+
 :tags: openstack, pip, lockdown, cloud, ansible
 :category: \*nix
 
@@ -21,3 +22,4 @@ using pip are from a known repository of packages.
 
 
 This was intended for use with a repository built from the repo role.
+
