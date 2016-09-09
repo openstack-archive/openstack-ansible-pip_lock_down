@@ -18,3 +18,6 @@ curl
 # Requirements for Paramiko 2.0
 libssl-dev
 libffi-dev
+
+# Required for compressing collected log files in CI
+gzip
