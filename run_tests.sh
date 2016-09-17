@@ -15,24 +15,41 @@
 
 set -euov
 
-ROLE_NAME=$(basename $(pwd))
 FUNCTIONAL_TEST=${FUNCTIONAL_TEST:-true}
 
-pushd tests
-  ansible-galaxy install \
-                 --role-file=ansible-role-requirements.yml \
-                 --ignore-errors \
-                 --force
+# Install pip
+if [ ! "$(which pip)" ]; then
+  curl --silent --show-error --retry 5 \
+    https://bootstrap.pypa.io/get-pip.py | sudo python2.7
+fi
 
-  ansible-playbook -i inventory \
-                   --syntax-check \
-                   --list-tasks \
-                   -e "rolename=${ROLE_NAME}" \
-                   test.yml
+# Install bindep and tox
+sudo pip install bindep tox
 
-  ansible-lint test.yml
+# CentOS 7 requires two additional packages:
+#   redhat-lsb-core - for bindep profile support
+#   epel-release    - required to install python-ndg_httpsclient/python2-pyasn1
+if [ "$(which yum)" ]; then
+    sudo yum -y install redhat-lsb-core epel-release
+fi
 
-  if ${FUNCTIONAL_TEST}; then
-    ansible-playbook -i inventory -e "rolename=${ROLE_NAME}" test.yml
+# Install OS packages using bindep
+if apt-get -v >/dev/null 2>&1 ; then
+    sudo apt-get update
+    DEBIAN_FRONTEND=noninteractive \
+      sudo apt-get -q --option "Dpkg::Options::=--force-confold" \
+      --assume-yes install `bindep -b -f bindep.txt test`
+else
+    sudo yum install -y `bindep -b -f bindep.txt test`
+fi
+
+# run through each tox env and execute the test
+for tox_env in $(awk -F= '/envlist/ {print $2}' tox.ini | sed 's/,/ /g'); do
+  if [ "${tox_env}" != "ansible-functional" ]; then
+    tox -e ${tox_env}
+  elif [ "${tox_env}" == "ansible-functional" ]; then
+    if ${FUNCTIONAL_TEST}; then
+      tox -e ${tox_env}
+    fi
   fi
-popd
+done
