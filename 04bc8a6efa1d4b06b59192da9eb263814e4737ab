@@ -1,0 +1,10 @@
+Verified+1: Zuul
+Code-Review+2: Major Hayden <major@mhtx.net>
+Code-Review+2: Kevin Carter (cloudnull) <kevin@cloudnull.com>
+Workflow+1: Kevin Carter (cloudnull) <kevin@cloudnull.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 11 Oct 2017 15:51:18 +0000
+Reviewed-on: https://review.openstack.org/510513
+Project: openstack/openstack-ansible-pip_lock_down
+Branch: refs/heads/master
